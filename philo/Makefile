@@ -46,7 +46,7 @@ CFLAGS = -Wall -Wextra -Werror -ggdb
 else ifdef WITH_DEBUG_THREAD
 CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
 else
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -MP -MMD
 endif
 
 CPPFLAGS = -I./include
@@ -56,18 +56,19 @@ RM = rm -rf
 
 SRC_DIR = ./
 UTILS_DIR = ./
-OBJ_DIR = obj/
+OBJ_DIR = ./obj/
 
 SRC_FILES = main.c
 UTILS_FILES = initialise.c error.c libc.c
-
-INCLUDE_FILE = philosophers.h
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 UTILS = $(addprefix $(UTILS_DIR), $(UTILS_FILES))
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC)) \
 		$(patsubst $(UTILS_DIR)%.c, $(OBJ_DIR)%.o, $(UTILS)) \
+
+DEPS = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.d, $(SRC)) \
+		$(patsubst $(UTILS_DIR)%.c, $(OBJ_DIR)%.d, $(UTILS)) \
 
 COMPILE_MSG = @echo "$(CLEAR_LINE)🧩 🦔 $(T_WHITE)$(BOLD)Compiling $(ITALIC)$<$(RESET)"
 OBJ_MSG = @echo "✅ 🦔 $(T_YELLOW)$(BOLD)Objects $(RESET)$(T_GREEN)created successfully!$(RESET)"
@@ -81,7 +82,8 @@ FCLEAN_MSG = @echo "🗑️  🦔 $(T_MAGENTA)$(BOLD)$(ITALIC)$(NAME) $(RESET)$(
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(INCLUDE_FILE)
+$(NAME): $(OBJ)
+	$(DEPS_DIR)
 	$(OBJ_MSG)
 	@$(CC) -o $(NAME) $(CFLAGS) $(CPPFLAGS) $(OBJ)
 	$(OUTPUT_MSG)
@@ -98,6 +100,8 @@ $(OBJ_DIR)%.o: $(UTILS_DIR)%.c | $(OBJ_DIR)
 	$(COMPILE_MSG)
 	@$(CC) -o $@ $(CFLAGS) $(CPPFLAGS) $(LDLIBS) -c $<
 
+-include $(DEPS)
+
 clean:
 	@$(RM) $(OBJ_DIR)
 	$(CLEAN_MSG)
@@ -111,7 +115,7 @@ re:
 	@make -s all
 
 run: $(NAME)
-	@./$(NAME) $(ARGS)
+	@./$(NAME) $(ARGS) || true
 
 debug: fclean
 	@make -s WITH_DEBUG=1
