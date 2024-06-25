@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:09:33 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/05/23 16:29:15 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/06/25 12:35:28 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,25 @@ size_t	ft_strlen(const char *str)
 	counter = 0;
 	while (str[counter])
 		++counter;
+	return (counter);
+}
+
+size_t	ft_numlen(const char *str)
+{
+	size_t	counter;
+	size_t	index;
+
+	counter = 0;
+	index = 0;
+	if (!str)
+		return (0);
+	while (str[index] && str[index] == '0')
+		++index;
+	while (str[index])
+	{
+		++index;
+		++counter;
+	}
 	return (counter);
 }
 
