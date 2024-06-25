@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/05/23 17:42:49 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/06/25 12:35:34 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@
 
 # define ERROR "\033[31m[ERROR]\033[0m "
 # define MAX_TIME 999999
-# define MIN_TIME 0
+# define MIN_TIME 60
+# define MAX_EATS 999999
+# define MIN_EATS 0
 # define MAX_PHILO 200
 # define MIN_PHILO 1
 
@@ -44,8 +46,6 @@ typedef struct s_philo	t_philo;
 typedef struct s_table	t_table;
 typedef struct s_info	t_info;
 typedef struct s_error	t_error;
-
-// Renaming types for name consistency
 typedef pthread_mutex_t	t_mutex;
 typedef time_t			t_time;
 
@@ -59,7 +59,12 @@ enum e_error
 	MISSING_ARGS,
 	RIP_MALLOC,
 	RIP_MUTEX,
-	NOT_VALID_NUMBER,
+	INVALID_NUMBER,
+	INVALID_PHILO_AMOUNT,
+	INVALID_TIME_TO_DIE,
+	INVALID_TIME_TO_EAT,
+	INVALID_TIME_TO_SLEEP,
+	INVALID_EAT_AMOUNT,
 	KO,
 };
 
@@ -101,8 +106,8 @@ struct	s_philo
 	int		id;
 	int		meal_counter;
 	int		status;
-	t_time	last_meal;
-	t_time	time_to[3];
+	time_t	last_meal;
+	time_t	time_to[3];
 };
 
 struct	s_info
@@ -119,10 +124,11 @@ struct	s_info
 /* @------------------------------------------------------------------------@ */
 
 int		error_handler(t_info *info, int error);
-void	error_set_location(t_info *info, char *file, int line);
+t_info	*error_set_location(t_info *info, char *file, int line);
 int		initialise_info(t_info *info);
 int		finish_simulation(t_info *info);
 size_t	ft_strlen(const char *str);
+size_t	ft_numlen(const char *str);
 int		ft_atoi(const char *str);
 int		ft_strncmp(const char *str, const char *str2, size_t bytes);
 

@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:21:48 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/05/25 15:47:58 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/06/25 12:42:08 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,14 @@ static int	initialise_table(t_info *info)
 	int	index;
 
 	index = -1;
-	info->table.philo = malloc(info->n_philo * sizeof(t_philo));
+	info->table.philo = malloc(info->n_philo * sizeof(*info->table.philo));
 	if (!info->table.philo)
-	{
-		error_set_location(info, __FILE__, __LINE__ - 3);
-		return (error_handler(info, RIP_MALLOC));
-	}
-	info->table.forks = malloc(info->n_philo * sizeof(t_mutex));
+		return (error_handler(error_set_location(info, __FILE__, __LINE__ - 2),
+				RIP_MALLOC));
+	info->table.forks = malloc(info->n_philo * sizeof(*info->table.forks));
 	if (!info->table.forks)
-	{
-		error_set_location(info, __FILE__, __LINE__ - 3);
-		return (error_handler(info, RIP_MALLOC));
-	}
+		return (error_handler(error_set_location(info, __FILE__, __LINE__ - 2),
+				RIP_MALLOC));
 	while (++index < info->n_philo)
 		if (pthread_mutex_init(&info->table.forks[index], NULL) != OK)
 			return (error_handler(info, RIP_MUTEX));
