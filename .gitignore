@@ -1,0 +1,6 @@
+*.o
+*.out
+*.swp
+.DS_Store
+tags
+philo/philo
