@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/06/25 12:35:34 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/06/29 18:45:26 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <pthread.h>
-# include <string.h>
 # include <sys/time.h>
 # include <sys/types.h>
 # include <stdbool.h>
@@ -47,7 +46,8 @@ typedef struct s_table	t_table;
 typedef struct s_info	t_info;
 typedef struct s_error	t_error;
 typedef pthread_mutex_t	t_mutex;
-typedef time_t			t_time;
+typedef unsigned long	t_time;
+typedef pthread_t		t_pthread;
 
 /* @------------------------------------------------------------------------@ */
 /* |                                 Enums                                  | */
@@ -58,6 +58,7 @@ enum e_error
 	OK = 0,
 	MISSING_ARGS,
 	RIP_MALLOC,
+	RIP_THREAD,
 	RIP_MUTEX,
 	INVALID_NUMBER,
 	INVALID_PHILO_AMOUNT,
@@ -70,10 +71,11 @@ enum e_error
 
 enum e_state
 {
-	EAT = 0,
+	DIE = 0,
+	EAT,
 	SLEEP,
-	DIE,
 	THINK,
+	TAKING_FORK,
 };
 
 enum e_forks
@@ -101,22 +103,29 @@ struct	s_table
 
 struct	s_philo
 {
-	bool	is_alive;
-	bool	forks[2];
-	int		id;
-	int		meal_counter;
-	int		status;
-	time_t	last_meal;
-	time_t	time_to[3];
+	bool		is_alive;
+	bool		forks[2];
+	int			id;
+	int			meal_counter;
+	int			status;
+	t_time		last_meal;
+	t_time		time_of[3];
+	t_pthread	thread;
+	t_info		*info;
 };
 
 struct	s_info
 {
 	int		argc;
 	int		n_philo;
+	int		n_meals;
 	char	**argv;
+	t_time	limit_time_to[3];
 	t_error	error;
 	t_table	table;
+	t_mutex	mutex;
+	t_mutex	print_mutex;
+	bool	finish;
 };
 
 /* @------------------------------------------------------------------------@ */
@@ -130,6 +139,10 @@ int		finish_simulation(t_info *info);
 size_t	ft_strlen(const char *str);
 size_t	ft_numlen(const char *str);
 int		ft_atoi(const char *str);
+t_time	ft_atot(const char *str);
 int		ft_strncmp(const char *str, const char *str2, size_t bytes);
+t_time	get_elapsed_time(void);
+void	print_message(t_philo *philo, int state);
+void	my_sleep(t_time time_in_ms);
 
 #endif // PHILOSOPHERS_H
