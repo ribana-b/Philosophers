@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/06/29 18:45:26 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/04 09:27:44 by ribana-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 
 # define ERROR "\033[31m[ERROR]\033[0m "
 # define MAX_TIME 999999
-# define MIN_TIME 60
+# define MIN_TIME 20
 # define MAX_EATS 999999
 # define MIN_EATS 0
 # define MAX_PHILO 200
@@ -46,7 +46,7 @@ typedef struct s_table	t_table;
 typedef struct s_info	t_info;
 typedef struct s_error	t_error;
 typedef pthread_mutex_t	t_mutex;
-typedef unsigned long	t_time;
+typedef long			t_time;
 typedef pthread_t		t_pthread;
 
 /* @------------------------------------------------------------------------@ */
@@ -99,19 +99,24 @@ struct	s_table
 {
 	t_mutex	*forks;
 	t_philo	*philo;
+	t_mutex	mutex;
 };
 
 struct	s_philo
 {
 	bool		is_alive;
-	bool		forks[2];
+	int			forks[2];
 	int			id;
 	int			meal_counter;
 	int			status;
 	t_time		last_meal;
-	t_time		time_of[3];
+	t_time		time_of_death;
+	t_time		time_of_eat;
+	t_time		time_of_sleep;
+	t_time		time_of_think;
 	t_pthread	thread;
 	t_info		*info;
+	t_mutex		mutex;
 };
 
 struct	s_info

@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:40:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/06/28 11:10:04 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/03 20:06:13 by ribana-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_time	get_elapsed_time(void)
 	}
 	gettimeofday(&current, NULL);
 	result = (current.tv_sec * 1e3 + current.tv_usec * 1e-3)
-		-(start.tv_sec * 1e3 + start.tv_usec * 1e-3);
+		- (start.tv_sec * 1e3 + start.tv_usec * 1e-3);
 	return (result);
 }
 
