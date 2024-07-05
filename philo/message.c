@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 09:56:40 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/04 02:40:26 by ribana-b         ###   ########.fr       */
+/*   Updated: 2024/07/05 22:53:00 by ribana-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	print_message(t_philo *philo, int state)
 	else if (state == EAT)
 		printf("%12lu\t\t%3d is eating\n", philo->time_of_eat, philo->id + 1);
 	else if (state == SLEEP)
-		printf("%12lu\t\t%3d is sleeping\n", philo->time_of_sleep, philo->id + 1);
+		printf("%12lu\t\t%3d is sleeping\n", philo->time_of_sleep,
+					philo->id + 1);
 	else if (state == THINK)
 		printf("is thinking\n");
 	pthread_mutex_unlock(&philo->info->print_mutex);

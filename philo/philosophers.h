@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/04 09:27:44 by ribana-b         ###   ########.fr       */
+/*   Updated: 2024/07/05 22:29:04 by ribana-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ struct	s_philo
 
 struct	s_info
 {
+	t_time	start;
 	int		argc;
 	int		n_philo;
 	int		n_meals;
