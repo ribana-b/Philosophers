@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 00:05:11 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/04 10:32:20 by ribana-b         ###   ########.fr       */
+/*   Updated: 2024/07/05 22:56:24 by ribana-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ void	take_forks(t_philo *philo)
 
 void	start_eating(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->mutex);
 	philo->time_of_eat = get_elapsed_time();
+	pthread_mutex_unlock(&philo->mutex);
 	philo->status = EAT;
 	print_message(philo, EAT);
 	my_sleep(philo->info->limit_time_to[EAT]);
@@ -78,12 +80,13 @@ void	start_eating(t_philo *philo)
 		pthread_mutex_unlock(&philo->info->table.forks[philo->forks[RIGHT]]);
 		pthread_mutex_unlock(&philo->info->table.forks[philo->forks[LEFT]]);
 	}
-	philo->last_meal = get_elapsed_time();
 }
 
 void	start_sleeping(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->mutex);
 	philo->time_of_sleep = get_elapsed_time();
+	pthread_mutex_unlock(&philo->mutex);
 	philo->status = SLEEP;
 	print_message(philo, SLEEP);
 	my_sleep(philo->info->limit_time_to[SLEEP]);
@@ -106,30 +109,53 @@ void	*routine(void *data)
 		usleep(60 * philo->info->n_philo);
 	while (1)
 	{
-		take_forks(philo);
-		start_eating(philo);
 		pthread_mutex_lock(&philo->info->mutex);
-		if (philo->meal_counter == philo->info->n_meals)
+		if (philo->meal_counter == philo->info->n_meals || philo->info->finish)
 		{
+			philo->info->finish = true;
 			pthread_mutex_unlock(&philo->info->mutex);
 			return (NULL);
 		}
 		pthread_mutex_unlock(&philo->info->mutex);
+		take_forks(philo);
+		start_eating(philo);
 		start_sleeping(philo);
+		pthread_mutex_lock(&philo->mutex);
+		philo->last_meal = get_elapsed_time();
+		pthread_mutex_unlock(&philo->mutex);
 		start_thinking(philo);
 	}
 	return (NULL);
 }
 
+bool	check_death(t_info *info, t_philo *philo)
+{
+	return (philo->last_meal - philo->time_of_eat > info->limit_time_to[DIE]);
+}
+
 void	*checker(void *data)
 {
 	t_info	*info;
+	int		index;
 
 	info = data;
 	while (1)
 	{
-		pthread_mutex_lock(&info->mutex);
-		pthread_mutex_unlock(&info->mutex);
+		index = -1;
+		while (++index < info->n_philo)
+		{
+			pthread_mutex_lock(&info->mutex);
+			pthread_mutex_lock(&info->table.philo[index].mutex);
+			if (check_death(info, &info->table.philo[index]) || info->finish)
+			{
+				info->finish = true;
+				pthread_mutex_unlock(&info->table.philo[index].mutex);
+				pthread_mutex_unlock(&info->mutex);
+				return (NULL);
+			}
+			pthread_mutex_unlock(&info->table.philo[index].mutex);
+			pthread_mutex_unlock(&info->mutex);
+		}
 		usleep(100);
 	}
 	return (NULL);
@@ -141,6 +167,8 @@ int	start_simulation(t_info *info)
 	int			index;
 
 	index = 0;
+	info->start = get_elapsed_time();
+	printf("%ld\n", info->limit_time_to[DIE]);
 	while (index < info->n_philo)
 	{
 		if (pthread_create(&info->table.philo[index].thread, NULL,
