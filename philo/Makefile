@@ -6,7 +6,7 @@
 #    By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/22 15:47:45 by ribana-b          #+#    #+# Malaga       #
-#    Updated: 2024/07/06 10:53:30 by ribana-b         ###   ########.com       #
+#    Updated: 2024/07/07 00:41:01 by ribana-b         ###   ########.com       #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,8 @@ UTILS_FILES := initialise.c \
 				message.c \
 				actions.c \
 				monitor.c \
-				threads.c
+				threads.c \
+				fork_utils.c
 
 INCLUDE = $(addprefix $(INCLUDE_DIR), $(INCLUDE_FILES))
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
