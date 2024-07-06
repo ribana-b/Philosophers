@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 10:48:05 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:47:03 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 22:59:02 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,24 @@ void	join_threads(t_info *info)
 	}
 }
 
+bool	safe_check(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->info->mutex);
+	if (philo->meal_counter == philo->info->n_meals)
+	{
+		philo->info->finish = true;
+		pthread_mutex_unlock(&philo->info->mutex);
+		return (true);
+	}
+	if (quick_check(philo))
+	{
+		pthread_mutex_unlock(&philo->info->mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->info->mutex);
+	return (false);
+}
+
 void	*routine(void *data)
 {
 	t_philo		*philo;
@@ -69,21 +87,8 @@ void	*routine(void *data)
 		usleep(60 * philo->info->n_philo);
 	while (1)
 	{
-		pthread_mutex_lock(&philo->info->mutex);
-		if (quick_check(philo))
-		{
-			pthread_mutex_unlock(&philo->info->mutex);
+		if (safe_check(philo))
 			return (NULL);
-		}
-		pthread_mutex_unlock(&philo->info->mutex);
-		pthread_mutex_lock(&philo->info->mutex);
-		if (philo->meal_counter == philo->info->n_meals)
-		{
-			philo->info->finish = true;
-			pthread_mutex_unlock(&philo->info->mutex);
-			return (NULL);
-		}
-		pthread_mutex_unlock(&philo->info->mutex);
 		take_forks(philo);
 		start_eating(philo);
 		start_sleeping(philo);
