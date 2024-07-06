@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 09:56:40 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:08:19 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 23:06:01 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,18 @@ static void	reset_color(void)
 
 int	print_message(t_philo *philo, int state, bool is_monitor)
 {
-	(void)is_monitor;
 	pthread_mutex_lock(&philo->info->print_mutex);
+	if (!is_monitor)
+	{
+		pthread_mutex_lock(&philo->info->mutex);
+		if (philo->info->finish)
+		{
+			pthread_mutex_unlock(&philo->info->mutex);
+			pthread_mutex_unlock(&philo->info->print_mutex);
+			return (1);
+		}
+		pthread_mutex_unlock(&philo->info->mutex);
+	}
 	philo->status = state;
 	apply_color(philo);
 	if (state == DIE)

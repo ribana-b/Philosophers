@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:00:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:50:46 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 23:17:50 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,26 +32,46 @@ void	take_forks(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[R]]);
 		take_single_fork(philo, R);
+		pthread_mutex_lock(&philo->info->mutex);
 		if (quick_check(philo))
+		{
+			pthread_mutex_unlock(&philo->info->mutex);
 			return ;
+		}
+		pthread_mutex_unlock(&philo->info->mutex);
 		print_message(philo, TAKING_FORK, false);
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[L]]);
 		take_single_fork(philo, L);
+		pthread_mutex_lock(&philo->info->mutex);
 		if (quick_check(philo))
+		{
+			pthread_mutex_unlock(&philo->info->mutex);
 			return ;
+		}
+		pthread_mutex_unlock(&philo->info->mutex);
 		print_message(philo, TAKING_FORK, false);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[L]]);
 		take_single_fork(philo, L);
+		pthread_mutex_lock(&philo->info->mutex);
 		if (quick_check(philo))
+		{
+			pthread_mutex_unlock(&philo->info->mutex);
 			return ;
+		}
+		pthread_mutex_unlock(&philo->info->mutex);
 		print_message(philo, TAKING_FORK, false);
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[R]]);
 		take_single_fork(philo, R);
+		pthread_mutex_lock(&philo->info->mutex);
 		if (quick_check(philo))
+		{
+			pthread_mutex_unlock(&philo->info->mutex);
 			return ;
+		}
+		pthread_mutex_unlock(&philo->info->mutex);
 		print_message(philo, TAKING_FORK, false);
 	}
 }
@@ -60,16 +80,20 @@ void	leave_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+		if (philo->fork_taken[L])
+			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
 		leave_single_fork(philo, L);
-		pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+		if (philo->fork_taken[R])
+			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
 		leave_single_fork(philo, R);
 	}
 	else
 	{
-		pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+		if (philo->fork_taken[R])
+			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
 		leave_single_fork(philo, R);
-		pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+		if (philo->fork_taken[L])
+			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
 		leave_single_fork(philo, L);
 	}
 }

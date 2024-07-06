@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 00:05:11 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:46:09 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 23:15:56 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,22 @@ bool	quick_check(t_philo *philo)
 		if ((philo->status == EAT || philo->status == TAKING_FORK)
 			&& philo->id % 2 == 0)
 		{
-			if (philo->fork_taken[R])
-				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
 			if (philo->fork_taken[L])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+			philo->fork_taken[L] = false;
+			if (philo->fork_taken[R])
 				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+			philo->fork_taken[R] = false;
 		}
 		else if ((philo->status == EAT || philo->status == TAKING_FORK)
-			&& philo->id % 2 == 0)
+			&& philo->id % 2 != 0)
 		{
 			if (philo->fork_taken[R])
 				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+			philo->fork_taken[R] = false;
 			if (philo->fork_taken[L])
 				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+			philo->fork_taken[L] = false;
 		}
 		return (true);
 	}
