@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 09:56:40 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 23:06:01 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 00:24:08 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@ void	apply_color(t_philo *philo)
 	unsigned char	g;
 	unsigned char	b;
 
-	r = 20;
-	g = (philo->id + 60 * 2) % 255;
-	b = (philo->id + 20 * 2) % 255;
+	r = philo->id;
+	g = (philo->id * 2) % 255;
+	b = (philo->id / 2) % 255;
 	if (philo->info->n_philo / 2 < philo->id)
 	{
 		g = (philo->id + 50) % 255;
 		b = (philo->id + 80) % 255;
 	}
+	if (b < 50)
+		b += 50;
 	printf("\e[0;48;2;%d;%d;%dm", r, g, b);
 	if (g > 127)
 		printf("\e[30m");

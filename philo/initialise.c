@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:21:48 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 16:34:51 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 23:46:32 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static int	initialise_philos(t_info *info)
 		info->table.philo[index].time_of_death = -1;
 		info->table.philo[index].time_of_sleep = -1;
 		info->table.philo[index].time_of_think = -1;
+		info->table.philo[index].status = ALIVE;
 		if (pthread_mutex_init(&info->table.philo[index].mutex, NULL) != OK)
 			return (error_handler(info, RIP_MUTEX));
 	}

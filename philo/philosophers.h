@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:46:16 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 23:46:42 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ enum e_state
 	SLEEP,
 	THINK,
 	TAKING_FORK,
+	ALIVE,
 };
 
 enum e_forks
