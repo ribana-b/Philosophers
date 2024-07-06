@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:00:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:27:42 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 20:50:46 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	take_forks(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[R]]);
 		take_single_fork(philo, R);
-		if (quick_check(philo, false))
+		if (quick_check(philo))
 			return ;
 		print_message(philo, TAKING_FORK, false);
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[L]]);
 		take_single_fork(philo, L);
-		if (quick_check(philo, false))
+		if (quick_check(philo))
 			return ;
 		print_message(philo, TAKING_FORK, false);
 	}
@@ -45,12 +45,12 @@ void	take_forks(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[L]]);
 		take_single_fork(philo, L);
-		if (quick_check(philo, false))
+		if (quick_check(philo))
 			return ;
 		print_message(philo, TAKING_FORK, false);
 		pthread_mutex_lock(&philo->info->table.fork[philo->fork[R]]);
 		take_single_fork(philo, R);
-		if (quick_check(philo, false))
+		if (quick_check(philo))
 			return ;
 		print_message(philo, TAKING_FORK, false);
 	}
@@ -77,8 +77,9 @@ void	leave_forks(t_philo *philo)
 void	start_eating(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
-	if (quick_check(philo, false))
+	if (quick_check(philo))
 	{
+		leave_forks(philo);
 		pthread_mutex_unlock(&philo->info->mutex);
 		return ;
 	}
@@ -86,7 +87,7 @@ void	start_eating(t_philo *philo)
 	pthread_mutex_lock(&philo->mutex);
 	philo->time_of_eat = get_elapsed_time();
 	pthread_mutex_unlock(&philo->mutex);
-		leave_forks(philo);
+	leave_forks(philo);
 	if (print_message(philo, EAT, false))
 		return ;
 	my_sleep(philo->info->limit_time_to[EAT]);
@@ -97,7 +98,7 @@ void	start_eating(t_philo *philo)
 void	start_sleeping(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
-	if (quick_check(philo, false))
+	if (quick_check(philo))
 	{
 		pthread_mutex_unlock(&philo->info->mutex);
 		return ;
@@ -114,7 +115,7 @@ void	start_sleeping(t_philo *philo)
 void	start_thinking(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
-	if (quick_check(philo, false))
+	if (quick_check(philo))
 	{
 		pthread_mutex_unlock(&philo->info->mutex);
 		return ;
