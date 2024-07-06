@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 09:56:40 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/07 00:24:08 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 00:33:53 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,25 @@ static void	reset_color(void)
 	printf("\e[0m\n");
 }
 
+void	print_the_actual_message(t_philo *philo)
+{
+	if (philo->status == DIE)
+		printf("\e[38;2;170;20;20m%8lu %11d died              ",
+			philo->time_of_death, philo->id + 1);
+	if (philo->status == TAKING_FORK)
+		printf("%8lu %11d has taken a fork  ", get_elapsed_time(),
+			philo->id + 1);
+	if (philo->status == EAT)
+		printf("%8lu %11d is eating         ", philo->time_of_eat,
+			philo->id + 1);
+	else if (philo->status == SLEEP)
+		printf("%8lu %11d is sleeping       ", philo->time_of_sleep,
+			philo->id + 1);
+	else if (philo->status == THINK)
+		printf("%8lu %11d is thinking       ", get_elapsed_time(),
+			philo->id + 1);
+}
+
 int	print_message(t_philo *philo, int state, bool is_monitor)
 {
 	pthread_mutex_lock(&philo->info->print_mutex);
@@ -56,21 +75,7 @@ int	print_message(t_philo *philo, int state, bool is_monitor)
 	}
 	philo->status = state;
 	apply_color(philo);
-	if (state == DIE)
-		printf("\e[38;2;170;20;20m%8lu %11d died              ",
-			philo->time_of_death, philo->id + 1);
-	if (state == TAKING_FORK)
-		printf("%8lu %11d has taken a fork  ", get_elapsed_time(),
-			philo->id + 1);
-	if (state == EAT)
-		printf("%8lu %11d is eating         ", philo->time_of_eat,
-			philo->id + 1);
-	else if (state == SLEEP)
-		printf("%8lu %11d is sleeping       ", philo->time_of_sleep,
-			philo->id + 1);
-	else if (state == THINK)
-		printf("%8lu %11d is thinking       ", get_elapsed_time(),
-			philo->id + 1);
+	print_the_actual_message(philo);
 	reset_color();
 	pthread_mutex_unlock(&philo->info->print_mutex);
 	return (0);

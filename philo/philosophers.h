@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 23:46:42 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 00:40:49 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,5 +164,9 @@ void	join_threads(t_info *info);
 bool	quick_check(t_philo *philo);
 void	apply_color(t_philo *philo);
 void	leave_forks(t_philo *philo);
+void	take_single_fork(t_philo *philo, int side);
+void	leave_single_fork(t_philo *philo, int side);
+bool	safe_take_fork_odd(t_philo *philo);
+bool	safe_take_fork_even(t_philo *philo);
 
 #endif // PHILOSOPHERS_H
