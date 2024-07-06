@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 10:48:05 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:27:49 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 20:47:03 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	*routine(void *data)
 	while (1)
 	{
 		pthread_mutex_lock(&philo->info->mutex);
-		if (quick_check(philo, false))
+		if (quick_check(philo))
 		{
 			pthread_mutex_unlock(&philo->info->mutex);
 			return (NULL);
@@ -87,9 +87,6 @@ void	*routine(void *data)
 		take_forks(philo);
 		start_eating(philo);
 		start_sleeping(philo);
-		pthread_mutex_lock(&philo->mutex);
-		philo->last_meal = get_elapsed_time();
-		pthread_mutex_unlock(&philo->mutex);
 		start_thinking(philo);
 	}
 	return (NULL);

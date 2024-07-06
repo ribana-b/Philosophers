@@ -6,33 +6,31 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 00:05:11 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 20:29:42 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/06 20:46:09 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-bool	quick_check(t_philo *philo, bool is_monitor)
+bool	quick_check(t_philo *philo)
 {
-	(void)is_monitor;
 	if (philo->info->finish)
 	{
-		if (philo->status == EAT || philo->status == TAKING_FORK)
+		if ((philo->status == EAT || philo->status == TAKING_FORK)
+			&& philo->id % 2 == 0)
 		{
-			if (philo->id % 2 == 0)
-			{
-				if (philo->fork_taken[R])
-					pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
-				if (philo->fork_taken[L])
-					pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
-			}
-			else
-			{
-				if (philo->fork_taken[R])
-					pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
-				if (philo->fork_taken[L])
-					pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
-			}
+			if (philo->fork_taken[R])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+			if (philo->fork_taken[L])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+		}
+		else if ((philo->status == EAT || philo->status == TAKING_FORK)
+			&& philo->id % 2 == 0)
+		{
+			if (philo->fork_taken[R])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+			if (philo->fork_taken[L])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
 		}
 		return (true);
 	}
