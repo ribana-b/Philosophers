@@ -6,7 +6,7 @@
 #    By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/22 15:47:45 by ribana-b          #+#    #+# Malaga       #
-#    Updated: 2024/07/04 02:33:42 by ribana-b         ###   ########.fr        #
+#    Updated: 2024/07/06 10:53:30 by ribana-b         ###   ########.com       #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,10 @@ UTILS_FILES := initialise.c \
 				error.c \
 				utils.c \
 				time.c \
-				message.c
+				message.c \
+				actions.c \
+				monitor.c \
+				threads.c
 
 INCLUDE = $(addprefix $(INCLUDE_DIR), $(INCLUDE_FILES))
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))

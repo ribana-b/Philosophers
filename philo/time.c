@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:40:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/03 20:06:13 by ribana-b         ###   ########.fr       */
+/*   Updated: 2024/07/06 11:42:15 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,12 @@ t_time	get_elapsed_time(void)
 
 void	my_sleep(t_time time_in_ms)
 {
-	usleep(time_in_ms * 1e3);
+	t_time	start;
+
+	start = get_elapsed_time();
+	while (get_elapsed_time() - start < time_in_ms)
+	{
+		usleep(100);
+		continue ;
+	}
 }

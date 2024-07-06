@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/05 22:29:04 by ribana-b         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:27:03 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 
 # define ERROR "\033[31m[ERROR]\033[0m "
 # define MAX_TIME 999999
-# define MIN_TIME 20
+# define MIN_TIME 60
 # define MAX_EATS 999999
 # define MIN_EATS 0
 # define MAX_PHILO 200
@@ -80,8 +80,8 @@ enum e_state
 
 enum e_forks
 {
-	LEFT = 0,
-	RIGHT,
+	L = 0,
+	R,
 };
 
 /* @------------------------------------------------------------------------@ */
@@ -97,15 +97,15 @@ struct	s_error
 
 struct	s_table
 {
-	t_mutex	*forks;
+	t_mutex	*fork;
 	t_philo	*philo;
-	t_mutex	mutex;
 };
 
 struct	s_philo
 {
 	bool		is_alive;
-	int			forks[2];
+	int			fork[2];
+	bool		fork_taken[2];
 	int			id;
 	int			meal_counter;
 	int			status;
@@ -122,6 +122,7 @@ struct	s_philo
 struct	s_info
 {
 	t_time	start;
+	bool	is_start;
 	int		argc;
 	int		n_philo;
 	int		n_meals;
@@ -131,6 +132,7 @@ struct	s_info
 	t_table	table;
 	t_mutex	mutex;
 	t_mutex	print_mutex;
+	t_mutex	monitor_mutex;
 	bool	finish;
 };
 
@@ -148,7 +150,18 @@ int		ft_atoi(const char *str);
 t_time	ft_atot(const char *str);
 int		ft_strncmp(const char *str, const char *str2, size_t bytes);
 t_time	get_elapsed_time(void);
-void	print_message(t_philo *philo, int state);
+int		print_message(t_philo *philo, int state, bool is_monitor);
 void	my_sleep(t_time time_in_ms);
+void	take_forks(t_philo *philo);
+void	start_eating(t_philo *philo);
+void	start_thinking(t_philo *philo);
+void	start_sleeping(t_philo *philo);
+void	*routine(void *data);
+void	*checker(void *data);
+int		create_threads(t_info *info);
+void	join_threads(t_info *info);
+bool	quick_check(t_philo *philo, bool is_monitor);
+void	apply_color(t_philo *philo);
+void	leave_forks(t_philo *philo);
 
 #endif // PHILOSOPHERS_H
