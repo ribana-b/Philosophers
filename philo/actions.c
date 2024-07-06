@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:00:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 23:17:50 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 00:16:15 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ void	start_eating(t_philo *philo)
 	pthread_mutex_lock(&philo->info->mutex);
 	if (quick_check(philo))
 	{
-		leave_forks(philo);
 		pthread_mutex_unlock(&philo->info->mutex);
+		leave_forks(philo);
 		return ;
 	}
 	pthread_mutex_unlock(&philo->info->mutex);
