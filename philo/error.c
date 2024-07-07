@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:22:51 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/06/25 11:48:53 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/06/28 11:47:18 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Usage:\033[0m\
 [number of times each philosopher must eat]\n\n\
 Examples:\n\
 \t\033[3m./philo 5 400 100 100\033[0m\n\
-\t\033[3m./philo 5 50 10 10 5\033[0m\n\
+\t\033[3m./philo 5 200 60 60 5\033[0m\n\
 ");
 	else if (info->error.status == RIP_MALLOC)
 		printf(ERROR"An allocation failed in %s:%d\n", \
@@ -36,6 +36,12 @@ info->error.file, info->error.line);
 		printf(ERROR"Invalid time to eat, it must be between 60-999999\n");
 	else if (info->error.status == INVALID_TIME_TO_SLEEP)
 		printf(ERROR"Invalid time to sleep, it must be between 60-999999\n");
+	else if (info->error.status == INVALID_EAT_AMOUNT)
+		printf(ERROR"Invalid eat amount, it must be between 0-999999\n");
+	else if (info->error.status == INVALID_EAT_AMOUNT)
+		printf(ERROR"Invalid eat amount, it must be between 0-999999\n");
+	else if (info->error.status == INVALID_EAT_AMOUNT)
+		printf(ERROR"Invalid eat amount, it must be between 0-999999\n");
 	else if (info->error.status == INVALID_EAT_AMOUNT)
 		printf(ERROR"Invalid eat amount, it must be between 0-999999\n");
 }

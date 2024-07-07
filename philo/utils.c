@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libc.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:09:33 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/06/25 12:35:28 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/06/27 15:06:53 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ size_t	ft_numlen(const char *str)
 	index = 0;
 	if (!str)
 		return (0);
-	while (str[index] && str[index] == '0')
+	while (str[index] && str[index + 1] && str[index] == '0')
 		++index;
 	while (str[index])
 	{
@@ -85,4 +85,22 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return (number * sign);
+}
+
+t_time	ft_atot(const char *str)
+{
+	t_time	number;
+
+	if (!str)
+		return (0);
+	while (*str == '\n' || *str == '\t' || *str == '\v' || *str == ' '
+		|| *str == '\f' || *str == '\r')
+		str++;
+	number = 0;
+	while (*str >= '0' && *str <= '9')
+	{
+		number = number * 10 + *str - '0';
+		str++;
+	}
+	return (number);
 }
