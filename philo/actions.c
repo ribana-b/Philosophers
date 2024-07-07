@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:00:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/07 00:39:54 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 16:19:24 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ void	start_eating(t_philo *philo)
 	pthread_mutex_lock(&philo->mutex);
 	philo->time_of_eat = get_elapsed_time();
 	pthread_mutex_unlock(&philo->mutex);
-	leave_forks(philo);
 	if (print_message(philo, EAT, false))
 		return ;
 	my_sleep(philo->info->limit_time_to[EAT]);
+	leave_forks(philo);
 	if (philo->info->n_meals != -1)
 		++philo->meal_counter;
 }
@@ -101,8 +101,8 @@ void	start_thinking(t_philo *philo)
 	else
 		philo->time_of_think = philo->info->limit_time_to[EAT] * 2
 			- philo->info->limit_time_to[SLEEP];
-	if (philo->time_of_think < 0)
-		philo->time_of_think = 0;
+	if (philo->time_of_think <= 0)
+		return ;
 	if (print_message(philo, THINK, false) == 1)
 		return ;
 	my_sleep(philo->time_of_think);
