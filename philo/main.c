@@ -6,11 +6,40 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 00:05:11 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/06/25 12:36:49 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 11:18:33 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+bool	quick_check(t_philo *philo)
+{
+	if (philo->info->finish)
+	{
+		if ((philo->status == EAT || philo->status == TAKING_FORK)
+			&& philo->id % 2 == 0)
+		{
+			if (philo->fork_taken[L])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+			philo->fork_taken[L] = false;
+			if (philo->fork_taken[R])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+			philo->fork_taken[R] = false;
+		}
+		else if ((philo->status == EAT || philo->status == TAKING_FORK)
+			&& philo->id % 2 != 0)
+		{
+			if (philo->fork_taken[R])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
+			philo->fork_taken[R] = false;
+			if (philo->fork_taken[L])
+				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
+			philo->fork_taken[L] = false;
+		}
+		return (true);
+	}
+	return (false);
+}
 
 static int	parse_arguments(t_info *info)
 {
@@ -23,7 +52,6 @@ static int	parse_arguments(t_info *info)
 		number = ft_atoi(info->argv[counter]);
 		if (ft_numlen(info->argv[counter]) > 6)
 			return (error_handler(info, INVALID_NUMBER));
-		printf("%d\n", number);
 		if (counter == 1 && (number < MIN_PHILO || number > MAX_PHILO))
 			return (error_handler(info, INVALID_PHILO_AMOUNT));
 		else if (counter == 2 && (number < MIN_TIME || number > MAX_TIME))
@@ -40,7 +68,16 @@ static int	parse_arguments(t_info *info)
 
 int	start_simulation(t_info *info)
 {
-	(void)info;
+	t_pthread	checker_thread;
+
+	info->start = get_elapsed_time();
+	if (create_threads(info) != OK)
+		return (info->error.status);
+	if (pthread_create(&checker_thread, NULL, &checker, info))
+		return (error_handler(info, KO));
+	usleep(100 * info->n_philo);
+	join_threads(info);
+	pthread_join(checker_thread, NULL);
 	return (OK);
 }
 
@@ -48,13 +85,19 @@ int	finish_simulation(t_info *info)
 {
 	int		index;
 
-	index = 0;
-	free(info->table.philo);
-	while (++index < info->n_philo && info->error.status != RIP_MALLOC)
+	index = -1;
+	usleep(100 * info->n_philo);
+	while (++index < info->n_philo && info->error.status != RIP_MALLOC &&
+			info->error.status != RIP_MUTEX)
 	{
-		pthread_mutex_destroy(&info->table.forks[index]);
+		pthread_mutex_destroy(&info->table.fork[index]);
+		pthread_mutex_destroy(&info->table.philo[index].mutex);
 	}
-	free(info->table.forks);
+	pthread_mutex_destroy(&info->mutex);
+	pthread_mutex_destroy(&info->print_mutex);
+	pthread_mutex_destroy(&info->monitor_mutex);
+	free(info->table.fork);
+	free(info->table.philo);
 	return (info->error.status);
 }
 

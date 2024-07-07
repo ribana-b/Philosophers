@@ -6,7 +6,7 @@
 #    By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/22 15:47:45 by ribana-b          #+#    #+# Malaga       #
-#    Updated: 2024/06/14 22:49:03 by ribana-b         ###   ########.com       #
+#    Updated: 2024/07/07 00:41:01 by ribana-b         ###   ########.com       #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,15 @@ OBJ_DIR := ./obj/
 
 INCLUDE_FILES := philosophers.h
 SRC_FILES := main.c
-UTILS_FILES := initialise.c error.c libc.c
+UTILS_FILES := initialise.c \
+				error.c \
+				utils.c \
+				time.c \
+				message.c \
+				actions.c \
+				monitor.c \
+				threads.c \
+				fork_utils.c
 
 INCLUDE = $(addprefix $(INCLUDE_DIR), $(INCLUDE_FILES))
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
@@ -110,7 +118,8 @@ clean:
 	@$(RM) $(OBJ_DIR)
 	$(CLEAN_MSG)
 
-fclean: clean
+fclean:
+	@make -s clean
 	@$(RM) $(NAME)
 	$(FCLEAN_MSG)
 
@@ -119,12 +128,14 @@ re:
 	@make -s all
 
 run: $(NAME)
-	@./$(NAME) $(ARGS) || true
+	@./$(NAME) 5 300 60 60 2 # $(ARGS) || true
 
-debug: fclean
+debug:
+	@make -s fclean
 	@make -s WITH_DEBUG=1
 
-debug_thread: fclean
+debug_thread:
+	@make -s fclean
 	@make -s WITH_DEBUG_THREAD=1
 
 tags:
