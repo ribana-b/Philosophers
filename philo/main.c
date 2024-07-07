@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 00:05:11 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 23:15:56 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 11:18:33 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,10 @@ int	finish_simulation(t_info *info)
 {
 	int		index;
 
-	index = 0;
+	index = -1;
 	usleep(100 * info->n_philo);
-	while (++index < info->n_philo && info->error.status != RIP_MALLOC)
+	while (++index < info->n_philo && info->error.status != RIP_MALLOC &&
+			info->error.status != RIP_MUTEX)
 	{
 		pthread_mutex_destroy(&info->table.fork[index]);
 		pthread_mutex_destroy(&info->table.philo[index].mutex);

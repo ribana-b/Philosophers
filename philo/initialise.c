@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:21:48 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 23:46:32 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/07/07 11:21:23 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ static int	initialise_table(t_info *info)
 		return (error_handler(error_set_location(info, __FILE__, __LINE__ - 2),
 				RIP_MALLOC));
 	while (++index < info->n_philo)
+	{
 		if (pthread_mutex_init(&info->table.fork[index], NULL) != OK)
 			return (error_handler(info, RIP_MUTEX));
+	}
 	return (OK);
 }
 
