@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 14:15:16 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/07 00:40:49 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/10/10 01:32:22 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,7 @@ void	*routine(void *data);
 void	*checker(void *data);
 int		create_threads(t_info *info);
 void	join_threads(t_info *info);
-bool	quick_check(t_philo *philo);
-void	apply_color(t_philo *philo);
+bool	is_simulation_still_running(t_philo *philo);
 void	leave_forks(t_philo *philo);
 void	take_single_fork(t_philo *philo, int side);
 void	leave_single_fork(t_philo *philo, int side);

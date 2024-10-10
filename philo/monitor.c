@@ -6,13 +6,32 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:50:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/07 00:20:53 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/10/10 04:32:13 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-bool	check_death(t_info *info, t_philo *philo)
+static void check_meals(t_info *info)
+{
+	int	index;
+	int	counter;
+
+	index = -1;
+	counter = 0;
+	while (++index < info->n_philo)
+	{
+		pthread_mutex_lock(&info->mutex);
+		counter += info->table.philo[index].meal_counter;
+		pthread_mutex_unlock(&info->mutex);
+	}
+	pthread_mutex_lock(&info->mutex);
+	if (counter == info->n_meals * info->n_philo)
+		info->finish = true;
+	pthread_mutex_unlock(&info->mutex);
+}
+
+static bool	check_death(t_info *info, t_philo *philo)
 {
 	if (get_elapsed_time() - philo->time_of_eat > info->limit_time_to[DIE]
 		&& philo->time_of_eat != -1)
@@ -24,7 +43,7 @@ bool	check_death(t_info *info, t_philo *philo)
 	return (false);
 }
 
-bool	check_philosophers(t_info *info)
+static bool	check_philosophers(t_info *info)
 {
 	int		index;
 
@@ -61,9 +80,10 @@ void	*checker(void *data)
 		return (NULL);
 	while (1)
 	{
+		check_meals(info);
 		if (check_philosophers(info))
 			return (NULL);
-		usleep(100);
+		my_sleep(100);
 	}
 	return (NULL);
 }

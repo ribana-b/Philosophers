@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:00:14 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/07 16:19:24 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/10/10 04:24:15 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,23 @@ void	leave_forks(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		if (philo->fork_taken[L])
-			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
-		leave_single_fork(philo, L);
+			leave_single_fork(philo, L);
 		if (philo->fork_taken[R])
-			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
-		leave_single_fork(philo, R);
+			leave_single_fork(philo, R);
 	}
 	else
 	{
 		if (philo->fork_taken[R])
-			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[R]]);
-		leave_single_fork(philo, R);
+			leave_single_fork(philo, R);
 		if (philo->fork_taken[L])
-			pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
-		leave_single_fork(philo, L);
+			leave_single_fork(philo, L);
 	}
 }
 
 void	start_eating(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
-	if (quick_check(philo))
+	if (!is_simulation_still_running(philo))
 	{
 		pthread_mutex_unlock(&philo->info->mutex);
 		leave_forks(philo);
@@ -65,14 +61,16 @@ void	start_eating(t_philo *philo)
 		return ;
 	my_sleep(philo->info->limit_time_to[EAT]);
 	leave_forks(philo);
+	pthread_mutex_lock(&philo->info->mutex);
 	if (philo->info->n_meals != -1)
 		++philo->meal_counter;
+	pthread_mutex_unlock(&philo->info->mutex);
 }
 
 void	start_sleeping(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
-	if (quick_check(philo))
+	if (!is_simulation_still_running(philo))
 	{
 		pthread_mutex_unlock(&philo->info->mutex);
 		return ;
@@ -89,7 +87,7 @@ void	start_sleeping(t_philo *philo)
 void	start_thinking(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
-	if (quick_check(philo))
+	if (!is_simulation_still_running(philo))
 	{
 		pthread_mutex_unlock(&philo->info->mutex);
 		return ;

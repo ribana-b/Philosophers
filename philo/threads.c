@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 10:48:05 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/06 22:59:02 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/10/10 04:20:22 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,19 @@ void	join_threads(t_info *info)
 	}
 }
 
-bool	safe_check(t_philo *philo)
+static bool	is_stop_simulation(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->mutex);
 	if (philo->meal_counter == philo->info->n_meals)
 	{
-		philo->info->finish = true;
 		pthread_mutex_unlock(&philo->info->mutex);
+		leave_forks(philo);
 		return (true);
 	}
-	if (quick_check(philo))
+	if (!is_simulation_still_running(philo))
 	{
 		pthread_mutex_unlock(&philo->info->mutex);
+		leave_forks(philo);
 		return (true);
 	}
 	pthread_mutex_unlock(&philo->info->mutex);
@@ -83,11 +84,9 @@ void	*routine(void *data)
 	t_philo		*philo;
 
 	philo = data;
-	if (philo->id % 2 != 0)
-		usleep(60 * philo->info->n_philo);
 	while (1)
 	{
-		if (safe_check(philo))
+		if (is_stop_simulation(philo))
 			return (NULL);
 		take_forks(philo);
 		start_eating(philo);
