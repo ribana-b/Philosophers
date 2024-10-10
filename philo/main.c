@@ -6,13 +6,13 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 00:05:11 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/07/07 11:18:33 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/10/10 04:14:37 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-bool	quick_check(t_philo *philo)
+bool	is_simulation_still_running(t_philo *philo)
 {
 	if (philo->info->finish)
 	{
@@ -36,9 +36,9 @@ bool	quick_check(t_philo *philo)
 				pthread_mutex_unlock(&philo->info->table.fork[philo->fork[L]]);
 			philo->fork_taken[L] = false;
 		}
-		return (true);
+		return (false);
 	}
-	return (false);
+	return (true);
 }
 
 static int	parse_arguments(t_info *info)
@@ -75,7 +75,6 @@ int	start_simulation(t_info *info)
 		return (info->error.status);
 	if (pthread_create(&checker_thread, NULL, &checker, info))
 		return (error_handler(info, KO));
-	usleep(100 * info->n_philo);
 	join_threads(info);
 	pthread_join(checker_thread, NULL);
 	return (OK);
@@ -86,7 +85,6 @@ int	finish_simulation(t_info *info)
 	int		index;
 
 	index = -1;
-	usleep(100 * info->n_philo);
 	while (++index < info->n_philo && info->error.status != RIP_MALLOC &&
 			info->error.status != RIP_MUTEX)
 	{
